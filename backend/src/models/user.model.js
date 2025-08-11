@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
       type:String,
       required:[true,"Password field is Required"]
      },
-     profileImg:{
+     avatar:{
       type:String,
       default:null
      },
