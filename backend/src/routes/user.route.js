@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logOut, registerNewUser } from "../controllers/user.controller.js";
+import { loginUser, logOut, refreshAccessToken, registerNewUser } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 
@@ -10,5 +10,11 @@ router.route("/register").post(registerNewUser);
 router.route("/login").post(loginUser);
 
 router.route("/logout").post(verifyJwt,logOut);
+
+router.route("/refresh-token").post(refreshAccessToken);
+//no need of verifyJwt as it will verify accessToken which is already expired 
+// so it will create a problem ; moreover its not a private route so we need to verify;
+
+
 
 export default router;
