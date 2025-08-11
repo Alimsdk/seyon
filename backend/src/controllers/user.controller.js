@@ -34,7 +34,10 @@ const registerNewUser=asyncHandler(async(req,res)=>{
     throw new ApiError(409,"User with this phone number exists!");
    }
 
+
    const user= await User.create({name,phone,email,address,password});
+
+   const {accessToken,refreshToken}=await generateAccessAndRefreshToken(user._id);
 
    const createdUser=await User.findById(user._id).select("-password -refreshToken");
 
@@ -42,8 +45,19 @@ const registerNewUser=asyncHandler(async(req,res)=>{
     throw new ApiError(500,"Something went wrong while registering user!");
    }
 
-   return res.status(201).json(
-    new ApiResponse(200,createdUser,"User Registered Successfully!")
+
+    const options={
+        httpOnly:true,
+        secure:true
+    }
+
+   return res.status(201)
+   .cookie("accessToken",accessToken,options)
+   .cookie("refreshToken",refreshToken,options)
+   .json(
+    new ApiResponse(200,
+       { user:createdUser,accessToken,refreshToken}
+    ,"User Registered Successfully!")
    );
 
 
@@ -91,7 +105,7 @@ const loginUser=asyncHandler(async(req,res)=>{
 
 const logOut=asyncHandler(async(req,res)=>{
    await User.findByIdAndUpdate(
-    req.user._id, // middleware lekha baki
+    req.user._id, // middleware theke astese
     {
         $unset:{
             refreshToken:1

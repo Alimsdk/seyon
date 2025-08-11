@@ -1,0 +1,12 @@
+{
+    // Force cursor to be a thin line
+    "editor.cursorStyle": "line",
+    "editor.cursorWidth": 1,
+
+    // Make it blink normally
+    "editor.cursorBlinking": "blink",
+
+    // Optional: keep font default to avoid cursor scaling
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "editor.fontSize": 14
+}
