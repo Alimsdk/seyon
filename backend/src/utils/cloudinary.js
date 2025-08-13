@@ -13,11 +13,11 @@ cloudinary.config({
 const uploadOnCloudinary=async(localFilePath)=>{
     try {
         if(!localFilePath) return null;
-         console.log("abar local",localFilePath);
+         
          
         try {
             const response=await cloudinary.uploader.upload(localFilePath,{
-                resource_type:"image"
+                resource_type:"auto"
             });
               console.log("file is uploaded on cloudinary",response.url);
               fs.unlinkSync(localFilePath);
@@ -34,4 +34,29 @@ const uploadOnCloudinary=async(localFilePath)=>{
     }
 };
 
-export {uploadOnCloudinary}
+const uploadMultipleOnCloudinary=async(files)=>{
+   try {
+       const uploads=await Promise.all(
+        files.map(file=>{
+            const resourceType=file.mimetype.startsWith("video") ? "video" : "image";
+            // file.mimetype -> image/jpg ; comes from multer;
+            return cloudinary.uploader.upload(file.path,{resource_type:resourceType});
+        })
+       );
+
+       files.forEach(file=> fs.unlinkSync(file.path));
+
+       return uploads.map(res=>({
+        type:res.resource_type,
+        public_id:res.public_id,
+        url:res.secure_url
+       }))
+
+
+   } catch (error) {
+    console.log("cloudinary multiple upload error",error);
+    return [];
+   }
+}
+
+export {uploadOnCloudinary,uploadMultipleOnCloudinary}
