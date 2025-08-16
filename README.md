@@ -31,4 +31,4 @@ Seyon is a mens clothing brand that sells high-quality polo t-shirts. This repos
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/seyon.git
+   git clone https://github.com/alimsdk/seyon.git
